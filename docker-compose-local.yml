@@ -1,0 +1,28 @@
+version: '2.15.1'
+services:
+  app:
+    image: 'starter-api-docker'
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresqldb
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresqldb:5432/starter_app
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=dbuserdbuser
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  postgresqldb:
+    image: postgres
+    container_name: postgresqldb
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=dbuserdbuser
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=starter_app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
